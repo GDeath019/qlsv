@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.jar.Attributes;
 
 public class DBhelper extends SQLiteOpenHelper {
@@ -81,7 +82,23 @@ public class DBhelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAllRecord(){
-        String query = "SELECT * FROM "+ TABLE_NAME;
+        String query = "SELECT * FROM "+ TABLE_NAME +" ORDER BY " + YEAROB +" asc";
         return myDB.rawQuery(query, null);
+    }
+
+    public ArrayList<Student> getAll(){
+        ArrayList<Student> st = new ArrayList<>();
+        String where = "SELECT * FROM "+ TABLE_NAME +" ORDER BY " + YEAROB +" asc";
+        Cursor cursor = myDB.rawQuery(where,null);
+        if (cursor.moveToFirst()){
+            do {
+                Student student = new Student();
+                student.setID(cursor.getInt(0));
+                student.setName(cursor.getString(1));
+                student.setYearob(cursor.getInt(2));
+                st.add(student);
+            }while (cursor.moveToNext());
+        }
+        return st;
     }
 }
